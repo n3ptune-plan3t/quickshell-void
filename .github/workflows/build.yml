@@ -1,0 +1,37 @@
+name: Build QuickShell with XBPS-src
+
+on:
+  push:
+    branches: [ main ]  # Triggers on pushes to main; adjust as needed
+  workflow_dispatch:  # Allows manual trigger from the Actions tab
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Clone void-packages
+        run: git clone --depth=1 https://github.com/void-linux/void-packages.git
+
+      - name: Bootstrap XBPS-src
+        working-directory: void-packages
+        run: ./xbps-src binary-bootstrap
+
+      - name: Copy template and shlibs (if any)
+        run: |
+          cp -r srcpkgs/* void-packages/srcpkgs/
+          if [ -f common/shlibs ]; then
+            cat common/shlibs >> void-packages/common/shlibs
+          fi
+
+      - name: Build package
+        working-directory: void-packages
+        run: ./xbps-src pkg quickshell
+
+      - name: Upload built packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: quickshell-packages
+          path: void-packages/hostdir/binpkgs/*.xbps
