@@ -15,6 +15,19 @@ jobs:
       - name: Clone void-packages
         run: git clone --depth=1 https://github.com/void-linux/void-packages.git
 
+      # New steps start here
+      - name: Install prerequisites
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget tar xz-utils ca-certificates
+
+      - name: Download and install XBPS static binaries
+        run: |
+          wget https://repo-default.voidlinux.org/static/xbps-static-latest.x86_64-musl.tar.xz
+          tar xvf xbps-static-latest.x86_64-musl.tar.xz
+          sudo install -Dm755 ./xbps-static-*/bin/* /usr/local/bin/
+      # New steps end here
+
       - name: Bootstrap XBPS-src
         working-directory: void-packages
         run: ./xbps-src binary-bootstrap
