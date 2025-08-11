@@ -1,50 +1,59 @@
-name: Build QuickShell with XBPS-src
+name: Void Package CI
 
 on:
   push:
-    branches: [ main ]  # Triggers on pushes to main; adjust as needed
-  workflow_dispatch:  # Allows manual trigger from the Actions tab
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Use an official Void Linux container to build
+    container:
+      image: voidlinux/voidlinux-musl:latest
+
     steps:
-      - name: Checkout repository
+      - name: 1. Checkout repository
         uses: actions/checkout@v4
 
-      - name: Clone void-packages
+      - name: 2. Install dependencies
+        run: xbps-install -Syu git xtools
+
+      - name: 3. Clone void-packages
         run: git clone --depth=1 https://github.com/void-linux/void-packages.git
 
-      # New steps start here
-      - name: Install prerequisites
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y wget tar xz-utils ca-certificates
+      - name: 4. Link custom template
+        # This assumes your template is in a directory named 'quickshell' at the root of your repo.
+        # It creates a symbolic link from your repo's 'quickshell' directory to the build system's 'srcpkgs' directory.
+        run: ln -s $GITHUB_WORKSPACE/quickshell void-packages/srcpkgs/quickshell
 
-      - name: Download and install XBPS static binaries
-        run: |
-          wget https://repo-default.voidlinux.org/static/xbps-static-latest.x86_64-musl.tar.xz
-          tar xvf xbps-static-latest.x86_64-musl.tar.xz
-          sudo install -Dm755 ./xbps-static-*/bin/* /usr/local/bin/
-      # New steps end here
-
-      - name: Bootstrap XBPS-src
-        working-directory: void-packages
-        run: ./xbps-src binary-bootstrap
-
-      - name: Copy template and shlibs (if any)
-        run: |
-          cp -r srcpkgs/* void-packages/srcpkgs/
-          if [ -f common/shlibs ]; then
-            cat common/shlibs >> void-packages/common/shlibs
-          fi
-
-      - name: Build package
-        working-directory: void-packages
-        run: ./xbps-src pkg quickshell
-
-      - name: Upload built packages
-        uses: actions/upload-artifact@v4
+      - name: 5. Cache xbps-src hostdir
+        uses: actions/cache@v4
+        id: cache-xbps
         with:
-          name: quickshell-packages
-          path: void-packages/hostdir/binpkgs/*.xbps
+          path: void-packages/hostdir
+          # The cache key is based on the OS and a hash of the bootstrap files.
+          # If void-packages updates its core, this will invalidate the cache.
+          key: ${{ runner.os }}-xbps-bootstrap-${{ hashFiles('void-packages/common/repo-keys/*') }}
+
+      - name: 6. Bootstrap build environment (if not cached)
+        # This step only runs if the cache from the previous step wasn't restored.
+        if: steps.cache-xbps.outputs.cache-hit != 'true'
+        run: |
+          cd void-packages
+          ./xbps-src binary-bootstrap
+
+      - name: 7. Build the package
+        # The main build command for your 'quickshell' package.
+        run: |
+          cd void-packages
+          ./xbps-src pkg quickshell
+      
+      - name: 8. Show build artifacts (for verification)
+        # This is an optional step to see the built .xbps files in the logs.
+        run: |
+          echo "Build complete. Found packages:"
+          ls -R void-packages/hostdir/binpkgs/
