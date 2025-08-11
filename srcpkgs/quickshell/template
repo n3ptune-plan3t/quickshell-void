@@ -47,7 +47,7 @@ license="LGPL-3.0-only"
 homepage="https://quickshell.org"
 
 
-distfiles="https://git.outfoxxed.me/quickshell/quickshell/archive/v${version}.tar.gz"
+distfiles="https://github.com/quickshell-mirror/quickshell/archive/refs/tags/v${version}.tar.gz"
 
 
 checksum=bd000d6ab5fbf050d3c6157af63f1ee7b35755a350ff8064b9b55b8a7f1682df
