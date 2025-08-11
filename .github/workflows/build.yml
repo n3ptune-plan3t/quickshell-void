@@ -1,4 +1,4 @@
-name: Build cli11 with XBPS-src
+name: Build quickshell with XBPS-src
 
 on:
   push:
@@ -41,10 +41,10 @@ jobs:
 
       - name: Build package
         working-directory: void-packages
-        run: ./xbps-src pkg cli11
+        run: ./xbps-src pkg quickshell
 
       - name: Upload built packages
         uses: actions/upload-artifact@v4
         with:
-          name: cli11-packages
+          name: quickshell-packages
           path: void-packages/hostdir/binpkgs/*.xbps
