@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04  # Use 22.04 to enable unprivileged namespaces by default
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -30,7 +30,7 @@ jobs:
         working-directory: void-packages
         run: |
           export XBPS_ARCH=x86_64
-          sudo ./xbps-src binary-bootstrap
+          ./xbps-src binary-bootstrap
 
       - name: Copy template and shlibs (if any)
         run: |
@@ -41,7 +41,7 @@ jobs:
 
       - name: Build package
         working-directory: void-packages
-        run: sudo ./xbps-src pkg quickshell
+        run: ./xbps-src pkg quickshell
 
       - name: Upload built packages
         uses: actions/upload-artifact@v4
