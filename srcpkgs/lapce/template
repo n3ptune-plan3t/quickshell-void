@@ -1,0 +1,59 @@
+# Template file for 'lapce'
+pkgname=lapce
+version=0.4.3
+revision=1
+archs="x86_64*"
+build_style=cargo
+# Use locked Cargo.lock from upstream release
+make_build_args="--locked"
+# binaries to install; cargo.sh will copy from target/release
+cargo_install_targets="lapce"
+
+# Tools used at build-time on the host
+hostmakedepends="pkg-config cmake python3"
+
+# Libraries/headers needed to compile (adjust if you hit missing deps)
+makedepends="
+ gtk+3-devel
+ libxkbcommon-devel
+ libxcb-devel
+ libxcb-render-util-devel
+ libxcb-util-devel
+ fontconfig-devel
+ freetype-devel
+ expat-devel
+ rust
+"
+
+depends="gtk+3 libxkbcommon libxcb fontconfig freetype expat"
+
+short_desc="Lightning-fast and powerful code editor written in Rust"
+maintainer="Plawanjyoti Talukdar <you@example.org>"
+license="Apache-2.0"
+homepage="https://lap.dev/lapce/"
+distfiles="https://github.com/lapce/lapce/archive/refs/tags/v${version}.tar.gz"
+# Run 'xgensum -i' from the template directory to fill this in:
+checksum=""
+
+# Upstream ships desktop entry & icon under extra/linux/
+post_install() {
+	# install .desktop
+	if [ -f extra/linux/dev.lapce.lapce.desktop ]; then
+		vinstall extra/linux/dev.lapce.lapce.desktop 644 usr/share/applications
+	fi
+
+	# install icon if present (svg or png)
+	if [ -f extra/linux/dev.lapce.lapce.svg ]; then
+		vinstall extra/linux/dev.lapce.lapce.svg 644 usr/share/icons/hicolor/scalable/apps
+	elif [ -f extra/linux/dev.lapce.lapce.png ]; then
+		# fall back to 256x256 if packaged that way
+		vinstall extra/linux/dev.lapce.lapce.png 644 usr/share/icons/hicolor/256x256/apps
+	fi
+
+	# desktop metadata: set binary name in Exec if needed (usually already correct)
+	sed -i 's|^Exec=.*|Exec=/usr/bin/lapce %F|' \
+		"$DESTDIR/usr/share/applications/dev.lapce.lapce.desktop" 2>/dev/null || :
+}
+
+# Lapce is a GUI editor; no tests
+make_check=no
