@@ -1,4 +1,4 @@
-name: Build quickshell with XBPS-src
+name: Build lapce with XBPS-src
 
 on:
   push:
@@ -35,7 +35,7 @@ jobs:
       - name: Fills Checksum XBPS-src
         working-directory: void-packages
         run: |
-          xgensum -i srcpkgs/lapce/template
+          ./xbps-src xgensum -i srcpkgs/lapce/template
 
       - name: Copy template and shlibs (if any)
         run: |
@@ -46,10 +46,10 @@ jobs:
 
       - name: Build package
         working-directory: void-packages
-        run: ./xbps-src pkg quickshell
+        run: ./xbps-src pkg lapce
 
       - name: Upload built packages
         uses: actions/upload-artifact@v4
         with:
-          name: quickshell-packages
+          name: lapce-packages
           path: void-packages/hostdir/binpkgs/*.xbps
