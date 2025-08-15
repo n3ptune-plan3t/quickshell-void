@@ -32,11 +32,6 @@ jobs:
           export XBPS_ARCH=x86_64
           ./xbps-src binary-bootstrap
 
-      - name: Fills Checksum XBPS-src
-        working-directory: void-packages
-        run: |
-          ./xbps-src xgensum -i srcpkgs/lapce/template
-
       - name: Copy template and shlibs (if any)
         run: |
           cp -r srcpkgs/* void-packages/srcpkgs/
