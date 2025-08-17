@@ -1,4 +1,4 @@
-name: Build rnote with XBPS-src
+name: Build rnote with XBPS-src.
 
 on:
   push:
