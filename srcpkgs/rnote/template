@@ -1,0 +1,14 @@
+pkgname=rnote
+version=0.12.0
+revision=1
+build_style=meson
+build_helper=rust
+hostmakedepends="cmake meson pkg-config gettext"
+makedepends="clang libclang-devel gtk4-devel libadwaita-devel poppler-glib-devel gstreamer1-devel libsndfile-devel glib-devel cairo-devel pango-devel gdk-pixbuf-devel"
+depends="alsa-lib glib gstreamer1 gtk4 libadwaita libsndfile poppler-glib"
+short_desc="Vector-based drawing app for sketching, handwritten notes and annotating documents"
+maintainer="Your Name your@email"
+license="GPL-3.0-or-later"
+homepage="https://rnote.flxzt.net/"
+distfiles="https://github.com/flxzt/rnote/archive/v${version}.tar.gz"
+checksum=b66037062bf9ee7268bab6c7cace0e04535006136c8c94d9131a51866fdbe062
