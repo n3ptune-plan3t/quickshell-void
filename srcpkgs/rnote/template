@@ -11,4 +11,4 @@ maintainer="Your Name your@email"
 license="GPL-3.0-or-later"
 homepage="https://rnote.flxzt.net/"
 distfiles="https://github.com/flxzt/rnote/archive/v${version}.tar.gz"
-checksum=b66037062bf9ee7268bab6c7cace0e04535006136c8c94d9131a51866fdbe062
+checksum=ec3d9df210b5b5336b5abdf5724d14fe7a575c5eb1713ddacf3083ea9b387267
