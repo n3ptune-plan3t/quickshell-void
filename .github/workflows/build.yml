@@ -1,4 +1,4 @@
-name: Build rnote with XBPS-src.
+name: Build mangowc with XBPS-src.
 
 on:
   push:
@@ -38,20 +38,13 @@ jobs:
           if [ -f common/shlibs ]; then
             cat common/shlibs >> void-packages/common/shlibs
           fi
-
-      - name: Install Rust toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          profile: minimal
-          components: cargo
-    
+          
       - name: Build package
         working-directory: void-packages
-        run: ./xbps-src pkg rnote
+        run: ./xbps-src pkg mangowc
 
       - name: Upload built packages
         uses: actions/upload-artifact@v4
         with:
-          name: rnote-packages
+          name: mangowc-packages
           path: void-packages/hostdir/binpkgs/*.xbps
