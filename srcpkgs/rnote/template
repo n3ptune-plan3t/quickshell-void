@@ -1,9 +1,11 @@
+# Template file for 'rnote'
 pkgname=rnote
 version=0.12.0
 revision=1
 build_style=meson
 build_helper=rust
-hostmakedepends="cmake meson pkg-config gettext"
+# Add 'rust' to this line
+hostmakedepends="cmake meson pkg-config gettext rust"
 makedepends="clang libclang19 gtk4-devel libadwaita-devel poppler-glib-devel gstreamer1-devel libsndfile-devel glib-devel cairo-devel pango-devel gdk-pixbuf-devel"
 depends="alsa-lib glib gstreamer1 gtk4 libadwaita libsndfile poppler-glib"
 short_desc="Vector-based drawing app for sketching, handwritten notes and annotating documents"
