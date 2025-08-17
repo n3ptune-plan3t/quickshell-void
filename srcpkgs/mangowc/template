@@ -1,0 +1,37 @@
+# Template file for 'mangowc'
+pkgname=mangowc
+version=0.8.2
+revision=1
+build_style=meson
+hostmakedepends="pkg-config meson ninja wayland-progs scdoc"
+makedepends="
+  wlroots-0.19-devel
+  scenefx-devel
+  wayland-devel
+  wayland-protocols
+  wayland-client-devel
+  wayland-server-devel
+  libinput-devel
+  libxkbcommon-devel
+  pcre2-devel
+  libxcb-devel
+  xcb-util-wm-devel
+"
+short_desc="Minimal wlroots-based Wayland compositor"
+maintainer="Your Name <you@example.com>"
+license="MIT"
+homepage="https://github.com/DreamMaoMao/mangowc"
+distfiles="https://github.com/DreamMaoMao/mangowc/archive/refs/tags/v${version}.tar.gz"
+checksum=a744dcf013c61ff6a4fae62be2e08f2e14cf02c5385c25fffc4b865b4335ccfc
+
+# If tests exist, enable checkdepends + do_check
+# checkdepends="..."
+
+do_install() {
+	# meson installs binary + desktop file
+	vmkdir usr/share/wayland-sessions
+	vmkdir etc/mango
+	vcopy build/mango usr/bin/
+	vcopy mango.desktop usr/share/wayland-sessions/
+	vcopy config.conf etc/mango/
+}
