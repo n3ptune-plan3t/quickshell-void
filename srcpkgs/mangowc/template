@@ -9,8 +9,6 @@ makedepends="
   scenefx-devel       
   wayland-devel
   wayland-protocols
-  wayland-client-devel
-  wayland-server-devel
   libinput-devel
   libxkbcommon-devel
   pcre2-devel
