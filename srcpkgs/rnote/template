@@ -1,15 +1,37 @@
 # Template file for 'rnote'
 pkgname=rnote
-version=0.12.0
+version=0.13.1
 revision=1
 build_style=meson
-build_helper=rust
-hostmakedepends="cmake meson pkg-config gettext rust"
-makedepends="desktop-file-utils clang libclang19 gtk4-devel libadwaita-devel poppler-glib-devel gstreamer1-devel libsndfile-devel glib-devel cairo-devel pango-devel gdk-pixbuf-devel"
-depends="alsa-lib glib gstreamer1 gtk4 libadwaita libsndfile poppler-glib"
-short_desc="Vector-based drawing app for sketching, handwritten notes and annotating documents"
-maintainer="Your Name your@email"
+hostmakedepends=(
+    "cargo"
+    "meson"
+    "pkg-config")
+    
+makedepends=(
+				"gtk4-devel"
+    "libadwaita-devel"
+    "poppler-glib-devel"
+    "appstream-glib-devel"
+    "desktop-file-utils"
+)
+depends=(
+    "gtk4"
+    "libadwaita"
+    "poppler-glib"
+    "gst-plugins-base1"
+)
+short_desc="Simple drawing application to create handwritten notes"
+homepage="https://github.com/flxzt/rnote"
 license="GPL-3.0-or-later"
-homepage="https://rnote.flxzt.net/"
-distfiles="https://github.com/flxzt/rnote/archive/v${version}.tar.gz"
-checksum=ec3d9df210b5b5336b5abdf5724d14fe7a575c5eb1713ddacf3083ea9b387267
+maintainer="ymp <tmp@tmp>"
+distfiles="${homepage}/archive/v${version}.tar.gz"
+checksum="18b34f643e913a69772da34dd87310e5ca89178122a27a3c3143eb91129f1b95"
+
+# Disable Link-Time Optimization, as it can be problematic with Rust.
+meson_args="-Db_lto=disabled"
+
+pre_build() {
+    # Fetch all Rust dependencies (crates) before starting the build.
+    cargo fetch --locked --target=${XBPS_TARGET_MACHINE}
+}
