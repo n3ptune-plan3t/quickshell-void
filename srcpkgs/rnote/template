@@ -25,7 +25,7 @@ short_desc="Simple drawing application to create handwritten notes"
 homepage="https://github.com/flxzt/rnote"
 license="GPL-3.0-or-later"
 maintainer="ymp <tmp@tmp>"
-distfiles="${homepage}/releases/download/v${version}/${pkgname}-${version}.tar.gz"
+distfiles="${homepage}/releases/download/v${version}/${pkgname}-${version}.tar.xz"
 checksum="843eae70ebdbbb4f417225771ce1086752fcb29ccf8bbb77296abae042d24759"
 
 # Disable Link-Time Optimization, as it can be problematic with Rust.
