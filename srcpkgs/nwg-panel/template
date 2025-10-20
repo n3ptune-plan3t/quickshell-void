@@ -1,0 +1,50 @@
+# Template file for 'nwg-panel'
+# Maintainer: YOUR_NAME <your@email.com>
+
+pkgname=nwg-panel
+version=0.10.12
+revision=2
+build_style=python3-pep517
+hostmakedepends=(
+    "python3-build"
+    "python3-installer"
+    "python3-setuptools"
+    "python3-wheel"
+)
+depends=(
+    "bluez"
+    "brightnessctl"
+    "glib"
+    "gtk+3"
+    "gtk-layer-shell"
+    "libappindicator-gtk3"
+    "playerctl"
+    "python3"
+    "python3-cairo"
+    "python3-dasbus"
+    "python3-gobject"
+    "python3-i3ipc"
+    "python3-netifaces"
+    "python3-psutil"
+    "python3-requests"
+)
+short_desc="GTK3-based panel for sway and Hyprland Wayland compositors"
+homepage="https://github.com/nwg-piotr/nwg-panel"
+license="MIT"
+distfiles="https://github.com/nwg-piotr/nwg-panel/archive/v${version}.tar.gz"
+checksum="86489ef34d24e8298c3f843202c477f539f141eb0cfcbedf48f0e20e4d5edf7f"
+
+post_install() {
+	# Install supplementary files not handled by the wheel installer.
+	# These helpers install files relative to the package's DESTDIR.
+	vinstall "${wrksrc}/${pkgname}.svg" 644 "/usr/share/pixmaps"
+	vinstall "${wrksrc}/nwg-shell.svg" 644 "/usr/share/pixmaps"
+	vinstall "${wrksrc}/nwg-processes.svg" 644 "/usr/share/pixmaps"
+	vinstall "${wrksrc}/${pkgname}-config.desktop" 644 "/usr/share/applications"
+	vinstall "${wrksrc}/${pkgname}.service" 644 "/usr/lib/systemd/user"
+	vdoc "README.md"
+
+	# The vlicense helper correctly installs the license file, which is
+	# required for the MIT license.
+	vlicense "LICENSE"
+}
